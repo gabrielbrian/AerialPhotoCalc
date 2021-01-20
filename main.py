@@ -1,4 +1,4 @@
-
+import csv
 from math import acos, degrees
 import math
 
@@ -63,7 +63,7 @@ CamD5 = Camera(5588,3712)
 CamSony7= Camera(9504,6336)
 
 
-SelectedCam = input("what Camera was used ? (D5,D850) : ")
+SelectedCam = input("what Camera was used ? (D5,D850,R7) : ")
 if SelectedCam == "D5":
 	SelectedCam = CamD5.x_res
 	print("You picked D5 , RES : ", CamD5.get_res())
@@ -92,38 +92,40 @@ angleFromPlane = math.asin(camTriagle.distance/camTriagle.get_ops()) * 180/math.
 angleOnGround = math.asin(camTriagle.altitude/camTriagle.get_ops()) * 180/math.pi
 C = 180 - angleFromPlane - angleOnGround
 
-
-def lenstriangle ():
-	closeBorderAng = angleFromPlane - SelectedLens_y
-	farBorderAng = angleFromPlane + SelectedLens_y
-	C2 = 90 - closeBorderAng
+closeBorderAng = angleFromPlane - SelectedLens_y
+farBorderAng = angleFromPlane + SelectedLens_y
+C2 = 90 - closeBorderAng
    
-	closeBorder = math.tan(math.radians(closeBorderAng))
-	closeBorder_Dis = closeBorder * camTriagle.altitude
-	closeBorder_Half = closeBorder_Dis * math.tan(math.radians(SelectedLens_x))
-	closeBorder_res = (closeBorder_Half * 2 / SelectedCam)
+closeBorder = math.tan(math.radians(closeBorderAng))
+closeBorder_Dis = closeBorder * camTriagle.altitude
+closeBorder_Half = closeBorder_Dis * math.tan(math.radians(SelectedLens_x))
+closeBorder_res = (closeBorder_Half * 2 / SelectedCam)
 
-	farBorder = math.tan(math.radians(farBorderAng))
-	farBorder_Dis = farBorder * camTriagle.altitude
-	farBorder_Half = farBorder_Dis * math.tan(math.radians(SelectedLens_x))
-	farBorder_res = (farBorder_Half * 2 / SelectedCam)
+farBorder = math.tan(math.radians(farBorderAng))
+farBorder_Dis = farBorder * camTriagle.altitude
+farBorder_Half = farBorder_Dis * math.tan(math.radians(SelectedLens_x))
+farBorder_res = (farBorder_Half * 2 / SelectedCam)
 
-	height = farBorder_Dis - closeBorder_Dis
-	squaremeter = ((farBorder_Half + closeBorder_Half) * height)
-	avg_ppm = (farBorder_res + 	closeBorder_res) / 2
-	
-	print("\n")
-	print(" distance to target ", camTriagle.get_ops())
-	print(" ground target angle : ", angleOnGround),
-	print(" Camera angle from plane : ",angleFromPlane)
-	print(" pixel per meter bottom : ",closeBorder_res)
-	print(" pixel per meter top : ", farBorder_res)
-	print(" avg pixel per meter : ",(farBorder_res + closeBorder_res) / 2 )
-	print(" height : ", height)
-	print(" top length : ", farBorder_Half* 2)
-	print(" bottom length : ", closeBorder_Half * 2)
-	print("	squaremeter : ", squaremeter)
-	
+height = farBorder_Dis - closeBorder_Dis
+squaremeter = ((farBorder_Half + closeBorder_Half) * height)
+avg_ppm = (farBorder_res + 	closeBorder_res) / 2
+		
+print("----------------------------------","\n","Done check the Report file !")
 
-lenstriangle()
+def Report():
+	with open('Report.csv', 'a', newline='') as file:
+		writer = csv.writer(file)
+		writer.writerow([" distance to target :",camTriagle.get_ops()])
+		writer.writerow([" ground target angle : ",angleOnGround])
+		writer.writerow([" Camera angle from plane : ",angleFromPlane])
+		writer.writerow([" pixel per meter top : ",farBorder_res])
+		writer.writerow([" pixel per meter bottom : ",closeBorder_res])
+		writer.writerow([" avg pixel per meter : ",avg_ppm])
+		writer.writerow([" height : ",height])
+		writer.writerow([" top length : ",farBorder_Half* 2])
+		writer.writerow([" bottom length : ",closeBorder_Half * 2])
+		writer.writerow([" squaremeter : ",squaremeter])
+		writer.writerow([" avg height and length : ", math.sqrt(squaremeter)])
+		writer.writerow(["------------------------------------------------------- "])
 
+Report()
