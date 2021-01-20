@@ -60,6 +60,7 @@ class Camera:
 
 CamD850 = Camera(8256,5504)
 CamD5 = Camera(5588,3712)
+CamSony7= Camera(9504,6336)
 
 
 SelectedCam = input("what Camera was used ? (D5,D850) : ")
@@ -69,6 +70,9 @@ if SelectedCam == "D5":
 elif SelectedCam == "D850":
 	SelectedCam = CamD850.x_res
 	print("You picked D850 , RES :  ",CamD850.get_res())
+elif SelectedCam == "R7":
+	SelectedCam = CamSony7.x_res
+	print("You picked SONY R7 , RES :  ",CamSony7.get_res())
 else:
 	raise SystemExit
 
@@ -114,6 +118,7 @@ def lenstriangle ():
 	print(" Camera angle from plane : ",angleFromPlane)
 	print(" pixel per meter bottom : ",closeBorder_res)
 	print(" pixel per meter top : ", farBorder_res)
+	print(" avg pixel per meter : ",(farBorder_res + closeBorder_res) / 2 )
 	print(" height : ", height)
 	print(" top length : ", farBorder_Half* 2)
 	print(" bottom length : ", closeBorder_Half * 2)
