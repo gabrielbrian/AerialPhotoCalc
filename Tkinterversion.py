@@ -24,14 +24,6 @@ class Camera:
 	def get_res(self):
 		return self.x_res * self.y_res	
 
-"""class Geo:
-	def __init__(self, distance, altitude):
-		self.distance = distance
-		self.altitude = altitude
-
-	def get_ops(self):
-		return math.sqrt(float(self.distance**2 + self.altitude**2))"""
-
 lens200 = Lens(200,10.3,6.9)
 lens300 = Lens(300,6.9,4.6)
 lens600 = Lens(600,3.4,2.3)
