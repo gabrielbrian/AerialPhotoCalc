@@ -131,12 +131,12 @@ background_image = tk.PhotoImage(file='plane.png')
 background_label = tk.Label(root, image=background_image)
 background_label.place(relwidth=1, relheight=1)
 
-distance = tk.Label(root,font=("Courier", 8),text="Distance Mtr",bd = 2)
+distance = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Distance Mtr",bd = 2)
 distance.place(x=200,y=20)
 distance_entry = tk.Entry(root,bd = 2)
 distance_entry.place(x=300,y=20,width=50)
 
-altitude = tk.Label(root,font=("Courier", 8),text="Altitude Mtr",bd = 2)
+altitude = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Altitude Mtr",bd = 2)
 altitude.place(x=200,y=50)
 altitude_entry = tk.Entry(root,bd = 2)
 altitude_entry.place(x=300,y=50,width=50)
@@ -146,7 +146,7 @@ cam_var = tk.StringVar(root)
 cam_var.set(CamList[0])
 
 CamMenu = tk.OptionMenu(root,cam_var,*CamList)
-CamMenu.config(width=8,height=1,font=("Courier", 10))
+CamMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
 CamMenu.place(x=40,y=10)
 
 LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
@@ -154,10 +154,10 @@ lens_var = tk.StringVar(root)
 lens_var.set(LensList[0])
 
 LensMenu = tk.OptionMenu(root,lens_var,*LensList)
-LensMenu.config(width=8,height=1,font=("Courier", 10))
+LensMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
 LensMenu.place(x=40,y= 50)
 
-Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"), command = Get)
+Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"),bg="#F2DDEC",activebackground = "grey", command = Get)
 Calculate.place(width="100px",x = 130 , y = 100)
 
 text_box = tk.Text(root, width = 40, height = 14)
