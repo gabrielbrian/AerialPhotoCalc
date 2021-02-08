@@ -166,7 +166,9 @@ def getLoc():
 	                
 	        latitude_final = dms_to_dd(my_image.gps_latitude, my_image.gps_latitude_ref)
 	        longitude_final = dms_to_dd(my_image.gps_longitude, my_image.gps_longitude_ref)
-	                
+	        altitude_final = my_image.gps_altitude      
+	        
+	        print(altitude_final)      
 	        complete = latitude_final,longitude_final
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',complete)
