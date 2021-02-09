@@ -183,7 +183,7 @@ def getLoc():
 def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
-	text_box2.insert('1.0',"      -------altitude-------")
+	text_box2.insert('1.0',"       -------altitude-------")
 	for pic in os.listdir(Dir):
 	    fullpath = os.path.join(Dir,pic)       
 	    with open(fullpath, 'rb') as image_file:
@@ -197,9 +197,9 @@ root.title('PhotoCalculator')
 root.geometry("800x450") 
 root.resizable(0, 0)
 
-background_image = tk.PhotoImage(file='Plane.png')
-background_label = tk.Label(root, image=background_image)
-background_label.place(relwidth=1, relheight=1)
+#background_image = tk.PhotoImage(file='Plane.png')
+#background_label = tk.Label(root, image=background_image)
+#background_label.place(relwidth=1, relheight=1)
 
 distance = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Distance Mtr",bd = 2)
 distance.place(x=200,y=20)
@@ -230,7 +230,7 @@ LensMenu.place(x=40,y= 50)
 Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"),bg="#F2DDEC",activebackground = "grey", command = Get)
 Calculate.place(width="100px",x = 130 , y = 100)
 
-text_box = tk.Text(root, width = 40, height = 16,borderwidth=3)
+text_box = tk.Text(root, width = 40, height = 16,borderwidth=3,font=("Courier", 10))
 text_box.place(x=40,y=150)
 
 Picfolder = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Folder path :",bd = 2)
@@ -242,7 +242,7 @@ Get_location = tk.Button(root, text = "Get coordinates",font=("Courier", 10,"bol
 Get_location.place(width="120px",x = 620 , y = 100)
 
 Get_alt = tk.Button(root, text = "Get altitude",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getalt)
-Get_alt.place(width="120px",x = 460 , y = 100)
+Get_alt.place(width="120px",x = 445 , y = 100)
 
 text_box2 = tk.Text(root, width = 40, height = 16,borderwidth=3,font=("Courier", 10))
 text_box2.place(x=450,y=150)
