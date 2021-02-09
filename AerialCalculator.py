@@ -36,8 +36,6 @@ CamD5 = Camera(5588,3712)
 Sony_Ar7= Camera(9504,6336)
 
 
-
-
 root = tk.Tk()
 
 def Get():
@@ -158,7 +156,9 @@ def getLoc():
 	        return dd
 	    else:
 	        raise RuntimeError('Incorrect gps_coords_ref {}'.format(gps_coords_ref))
-	        
+	
+	Coordinate_List = []
+
 	for pic in os.listdir(Dir):
 	    fullpath = os.path.join(Dir,pic)       
 	    with open(fullpath, 'rb') as image_file:
@@ -172,7 +172,13 @@ def getLoc():
 	        complete = latitude_final,longitude_final
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',complete)
-		
+
+	        Coordinate_List.append(complete)
+			
+	with open('coordinates.csv', 'a', newline='') as file:
+		writer = csv.writer(file)
+		for i in range(len(Coordinate_List)):
+			writer.writerow([Coordinate_List[i]])
 
 root.title('PhotoCalculator')
 root.geometry("800x450") 
