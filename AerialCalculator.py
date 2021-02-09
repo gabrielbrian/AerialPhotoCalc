@@ -146,7 +146,7 @@ def Get():
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
-	text_box2.insert('1.0',"-------coordinates-------")
+	text_box2.insert('1.0',"       -------coordinates-------")
 	def dms_to_dd(gps_coords, gps_coords_ref):
 	    d, m, s =  gps_coords
 	    dd = d + m / 60 + s / 3600
@@ -166,19 +166,32 @@ def getLoc():
 	                
 	        latitude_final = dms_to_dd(my_image.gps_latitude, my_image.gps_latitude_ref)
 	        longitude_final = dms_to_dd(my_image.gps_longitude, my_image.gps_longitude_ref)
-	        altitude_final = my_image.gps_altitude      
-	        
-	        print(altitude_final)      
+	                
 	        complete = latitude_final,longitude_final
+	
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',complete)
-
 	        Coordinate_List.append(complete)
 			
 	with open('coordinates.csv', 'a', newline='') as file:
 		writer = csv.writer(file)
+		writer.writerow(["------------------------------------------------------- "])
 		for i in range(len(Coordinate_List)):
 			writer.writerow([Coordinate_List[i]])
+
+
+def getalt():
+	text_box2.delete(1.0, "end-1c")
+	Dir = Picfolder_entry.get()
+	text_box2.insert('1.0',"      -------altitude-------")
+	for pic in os.listdir(Dir):
+	    fullpath = os.path.join(Dir,pic)       
+	    with open(fullpath, 'rb') as image_file:
+	        my_image = Image(image_file)
+	               
+	        altitude_final = my_image.gps_altitude 
+	        text_box2.insert('end','\n')
+	        text_box2.insert('end',altitude_final)
 
 root.title('PhotoCalculator')
 root.geometry("800x450") 
@@ -225,10 +238,13 @@ Picfolder.place(x=450,y=50)
 Picfolder_entry = tk.Entry(root,bd = 2)
 Picfolder_entry.place(x=550,y=50,width=200)
 
-Get_location = tk.Button(root, text = "Get coordinates",font=("Courier", 12,"bold"),bg="#F2DDEC",activebackground = "grey",command = getLoc)
-Get_location.place(width="140px",x = 520 , y = 100)
+Get_location = tk.Button(root, text = "Get coordinates",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getLoc)
+Get_location.place(width="120px",x = 620 , y = 100)
 
-text_box2 = tk.Text(root, width = 40, height = 16,borderwidth=3)
+Get_alt = tk.Button(root, text = "Get altitude",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getalt)
+Get_alt.place(width="120px",x = 460 , y = 100)
+
+text_box2 = tk.Text(root, width = 40, height = 16,borderwidth=3,font=("Courier", 10))
 text_box2.place(x=450,y=150)
 
 root.mainloop()
