@@ -25,7 +25,7 @@ class Camera:
 	def get_res(self):
 		return self.x_res * self.y_res	
 
-lens200 = Lens(200,10.3,6.9)
+lens200 = Lens(200,10.3,6.9) 
 lens300 = Lens(300,6.9,4.6)
 lens600 = Lens(600,3.4,2.3)
 lens800 = Lens(800,2.6,1.7)
@@ -197,7 +197,7 @@ root.title('PhotoCalculator')
 root.geometry("800x450") 
 root.resizable(0, 0)
 
-#background_image = tk.PhotoImage(file='Plane.png')
+#background_image = tk.PhotoImage(file='Plane.png') //uncomment to add background
 #background_label = tk.Label(root, image=background_image)
 #background_label.place(relwidth=1, relheight=1)
 
