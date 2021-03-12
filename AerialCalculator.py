@@ -1,9 +1,9 @@
 import tkinter as tk
 import csv
 from math import acos, degrees
-import math
 import os
 from exif import Image
+from PIL import Image, ExifTags
 
 class Lens:
     def __init__(self,mm , x_fov, y_fov):
@@ -37,6 +37,7 @@ Sony_Ar7= Camera(9504,6336)
 
 
 root = tk.Tk()
+
 
 def Get():
 	text_box.delete(1.0, "end-1c")
@@ -143,55 +144,78 @@ def Get():
 		writer.writerow(["------------------------------------------------------- "])
 
 
+
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
-	text_box2.insert('1.0',"       -------coordinates-------")
-	def dms_to_dd(gps_coords, gps_coords_ref):
-	    d, m, s =  gps_coords
-	    dd = d + m / 60 + s / 3600
-	    if gps_coords_ref.upper() in ('S', 'W'):
-	        return -dd
-	    elif gps_coords_ref.upper() in ('N', 'E'):
-	        return dd
-	    else:
-	        raise RuntimeError('Incorrect gps_coords_ref {}'.format(gps_coords_ref))
-	
+	text_box2.insert('1.0',"coordinates in csv")
+	img_contents = os.listdir(Dir)
 	Coordinate_List = []
+	def convert_to_degress(value):
 
-	for pic in os.listdir(Dir):
-	    fullpath = os.path.join(Dir,pic)       
-	    with open(fullpath, 'rb') as image_file:
-	        my_image = Image(image_file)
-	                
-	        latitude_final = dms_to_dd(my_image.gps_latitude, my_image.gps_latitude_ref)
-	        longitude_final = dms_to_dd(my_image.gps_longitude, my_image.gps_longitude_ref)
-	                
-	        complete = latitude_final,longitude_final
-	
-	        text_box2.insert('end','\n')
-	        text_box2.insert('end',complete)
-	        Coordinate_List.append(complete)
+		d0 = value[0][0]
+		d1 = value[0][1]
+		d = float(d0) / float(d1)
+
+		m0 = value[1][0]
+		m1 = value[1][1]
+		m = float(m0) / float(m1)
+
+		s0 = value[2][0]
+		s1 = value[2][1]
+		s = float(s0) / float(s1)
+
+		return d + (m / 60.0) + (s / 3600.0)
+
+	for image in img_contents:
+
+		full_path = os.path.join(Dir, image)
+		pil_img = Image.open(full_path)
+		exif = {ExifTags.TAGS[k]: v for k, v in pil_img._getexif().items() if k in ExifTags.TAGS}
+		gps_all = {}
+    
+		for key in exif['GPSInfo'].keys():
+			try:
+
+				decoded_value = ExifTags.GPSTAGS.get(key)
+				gps_all[decoded_value] = exif['GPSInfo'][key]
+
+			except:
+				print(full_path,"no info")
 			
-	with open('coordinates.csv', 'a', newline='') as file:
+			long = gps_all.get('GPSLongitude')
+			lat = gps_all.get('GPSLatitude')
+			
+		complete = lat,long
+		Coordinate_List.append(complete)
+	
+	with open('coordinates.csv', 'w', newline='') as file:
 		writer = csv.writer(file)
-		writer.writerow(["------------------------------------------------------- "])
-		for i in range(len(Coordinate_List)):
-			writer.writerow([Coordinate_List[i]])
-
-
+		writer.writerow(["-----coordinates------"])
+	
+	for result in Coordinate_List:
+		part1, part2 = result
+		Finallist = ('{} {}'.format(part1, part2))
+		with open('coordinates.csv', 'a', newline='') as file:
+			writer = csv.writer(file)
+			writer.writerow([Finallist])
+			
+	
 def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
 	text_box2.insert('1.0',"       -------altitude-------")
 	for pic in os.listdir(Dir):
 	    fullpath = os.path.join(Dir,pic)       
+	    
 	    with open(fullpath, 'rb') as image_file:
 	        my_image = Image(image_file)
 	               
 	        altitude_final = my_image.gps_altitude 
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',altitude_final)
+
+
 
 root.title('PhotoCalculator')
 root.geometry("800x450") 
@@ -230,7 +254,7 @@ LensMenu.place(x=40,y= 50)
 Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"),bg="#F2DDEC",activebackground = "grey", command = Get)
 Calculate.place(width="100px",x = 130 , y = 100)
 
-text_box = tk.Text(root, width = 40, height = 16,borderwidth=3,font=("Courier", 10))
+text_box = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
 text_box.place(x=40,y=150)
 
 Picfolder = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Folder path :",bd = 2)
@@ -244,8 +268,8 @@ Get_location.place(width="120px",x = 620 , y = 100)
 Get_alt = tk.Button(root, text = "Get altitude",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getalt)
 Get_alt.place(width="120px",x = 445 , y = 100)
 
-text_box2 = tk.Text(root, width = 40, height = 16,borderwidth=3,font=("Courier", 10))
-text_box2.place(x=450,y=150)
+text_box2 = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
+text_box2.place(x=425,y=150)
 
 root.mainloop()
 

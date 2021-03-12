@@ -129,3 +129,43 @@ def Report():
 		writer.writerow(["------------------------------------------------------- "])
 
 Report()
+
+
+"""
+def getLoc():
+	text_box2.delete(1.0, "end-1c")
+	Dir = Picfolder_entry.get()
+	text_box2.insert('1.0',"       -------coordinates-------")
+	def dms_to_dd(gps_coords, gps_coords_ref):
+	    d, m, s =  gps_coords
+	    dd = d + m / 60 + s / 3600
+	    if gps_coords_ref.upper() in ('S', 'W'):
+	        return -dd
+	    elif gps_coords_ref.upper() in ('N', 'E'):
+	        return dd
+	    else:
+	        raise RuntimeError('Incorrect gps_coords_ref {}'.format(gps_coords_ref))
+	
+	Coordinate_List = []
+
+	for pic in os.listdir(Dir):
+	    fullpath = os.path.join(Dir,pic)       
+	    with open(fullpath, 'rb') as image_file:
+	        my_image = Image(image_file)
+	                
+	        latitude_final = dms_to_dd(my_image.gps_latitude, my_image.gps_latitude_ref)
+	        longitude_final = dms_to_dd(my_image.gps_longitude, my_image.gps_longitude_ref)
+	                
+	        complete = latitude_final,longitude_final
+	
+	        text_box2.insert('end','\n')
+	        text_box2.insert('end',complete)
+	        Coordinate_List.append(complete)
+			
+	with open('coordinates.csv', 'a', newline='') as file:
+		writer = csv.writer(file)
+		writer.writerow(["------------------------------------------------------- "])
+		for i in range(len(Coordinate_List)):
+			writer.writerow([Coordinate_List[i]])
+
+"""
