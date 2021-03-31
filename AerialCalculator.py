@@ -191,8 +191,9 @@ def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
 	text_box2.insert('1.0',"       -------altitude-------")
+	
 	for pic in os.listdir(Dir):
-	    fullpath = os.path.join(Dir,pic)       
+	    fullpath = os.path.join(Dir,pic) 
 	    
 	    with open(fullpath, 'rb') as image_file:
 	        my_image = img(image_file)
@@ -200,7 +201,6 @@ def getalt():
 	        altitude_final = my_image.gps_altitude 
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',altitude_final)
-
 
 
 root.title('PhotoCalculator')
