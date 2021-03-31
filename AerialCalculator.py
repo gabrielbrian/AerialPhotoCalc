@@ -1,6 +1,6 @@
 import tkinter as tk
 import csv
-from math import acos, degrees
+import math
 import os
 from exif import Image as img
 from PIL import Image, ExifTags
@@ -80,6 +80,7 @@ def Get():
 
 	Currentdis = int(distance_entry.get())
 	Currentalt = int(altitude_entry.get())
+	Currentalt = Currentalt * 0.3048
 	camTriagle = math.sqrt(float(Currentdis**2 + Currentalt**2))
 
 	angleFromPlane = math.asin(Currentdis/camTriagle) * 180/math.pi
@@ -116,41 +117,26 @@ def Get():
 	Sqm = " Squaremeter : " + str("{:.2f}".format(squaremeter))
 	Avghl = " Avg height and length : " + str("{:.2f}".format(math.sqrt(squaremeter)))
 
-	text_box.insert('1.0',Distancetotarget + '\n')
-	text_box.insert('2.0',Groundangle + '\n')
-	text_box.insert('3.0',Planeangle + '\n')
-	text_box.insert('4.0',Farres + '\n')
-	text_box.insert('5.0',Closeres + '\n')
-	text_box.insert('6.0',Ppmavg + '\n')
-	text_box.insert('7.0',Height + '\n')
-	text_box.insert('8.0',Farlength + '\n')
-	text_box.insert('9.0',Closelength + '\n')
-	text_box.insert('10.0',Sqm + '\n' )
-	text_box.insert('11.0',Avghl+  '\n')
-	
+	parameters = [Distancetotarget,Groundangle,Planeangle,Farres,Closeres,Ppmavg,Height,Farlength,Closelength,Sqm,Avghl]
+
+
 	with open('Report.csv', 'a', newline='') as file:
 		writer = csv.writer(file)
-		writer.writerow([Distancetotarget])
-		writer.writerow([Groundangle])
-		writer.writerow([Planeangle])
-		writer.writerow([Farres])
-		writer.writerow([Closeres])
-		writer.writerow([Ppmavg])
-		writer.writerow([Height])
-		writer.writerow([Farlength])
-		writer.writerow([Closelength])
-		writer.writerow([Sqm])
-		writer.writerow([Avghl])
+		for i in range(len(parameters)):
+			writer.writerow([parameters[i]])
+			text_box.insert('end',parameters[i] + '\n')
 		writer.writerow(["------------------------------------------------------- "])
 
 
 
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
-	Dir = Picfolder_entry.get()
 	text_box2.insert('1.0',"coordinates in csv")
+	
+	Dir = Picfolder_entry.get()
 	img_contents = os.listdir(Dir)
 	Coordinate_List = []
+	
 	def convert_to_degress(value):
 
 		d0 = value[0][0]
@@ -226,14 +212,14 @@ root.resizable(0, 0)
 #background_label.place(relwidth=1, relheight=1)
 
 distance = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Distance Mtr",bd = 2)
-distance.place(x=200,y=20)
+distance.place(x=200,y=35)
 distance_entry = tk.Entry(root,bd = 2)
-distance_entry.place(x=300,y=20,width=50)
+distance_entry.place(x=300,y=30,width=50)
 
-altitude = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Altitude Mtr",bd = 2)
-altitude.place(x=200,y=50)
+altitude = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Altitude FT",bd = 2)
+altitude.place(x=200,y=65)
 altitude_entry = tk.Entry(root,bd = 2)
-altitude_entry.place(x=300,y=50,width=50)
+altitude_entry.place(x=300,y=60,width=50)
 
 CamList = ["D5","D850","Sony_Ar7",] 
 cam_var = tk.StringVar(root)
@@ -241,7 +227,7 @@ cam_var.set(CamList[0])
 
 CamMenu = tk.OptionMenu(root,cam_var,*CamList)
 CamMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
-CamMenu.place(x=40,y=10)
+CamMenu.place(x=50,y=20)
 
 LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
 lens_var = tk.StringVar(root)
@@ -249,16 +235,16 @@ lens_var.set(LensList[0])
 
 LensMenu = tk.OptionMenu(root,lens_var,*LensList)
 LensMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
-LensMenu.place(x=40,y= 50)
+LensMenu.place(x=50,y= 60)
 
 Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"),bg="#F2DDEC",activebackground = "grey", command = Get)
-Calculate.place(width="100px",x = 130 , y = 100)
+Calculate.place(width="100px",x = 135 , y = 100)
 
 text_box = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
 text_box.place(x=40,y=150)
 
 Picfolder = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Folder path :",bd = 2)
-Picfolder.place(x=450,y=50)
+Picfolder.place(x=450,y=55)
 Picfolder_entry = tk.Entry(root,bd = 2)
 Picfolder_entry.place(x=550,y=50,width=200)
 
