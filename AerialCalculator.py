@@ -211,22 +211,22 @@ root.resizable(0, 0)
 #background_label = tk.Label(root, image=background_image)
 #background_label.place(relwidth=1, relheight=1)
 
-distance = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Distance Mtr",bd = 2)
+distance = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Distance Mtr",bd = 2)
 distance.place(x=200,y=35)
 distance_entry = tk.Entry(root,bd = 2)
-distance_entry.place(x=300,y=30,width=50)
+distance_entry.place(x=300,y=30,width=65)
 
-altitude = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Altitude FT",bd = 2)
+altitude = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Altitude FT",bd = 2)
 altitude.place(x=200,y=65)
 altitude_entry = tk.Entry(root,bd = 2)
-altitude_entry.place(x=300,y=60,width=50)
+altitude_entry.place(x=300,y=60,width=65)
 
 CamList = ["D5","D850","Sony_Ar7",] 
 cam_var = tk.StringVar(root)
 cam_var.set(CamList[0])
 
 CamMenu = tk.OptionMenu(root,cam_var,*CamList)
-CamMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
+CamMenu.config(width=8,height=1,font=("Courier", 10),bg="#d6f9ff")
 CamMenu.place(x=50,y=20)
 
 LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
@@ -234,24 +234,24 @@ lens_var = tk.StringVar(root)
 lens_var.set(LensList[0])
 
 LensMenu = tk.OptionMenu(root,lens_var,*LensList)
-LensMenu.config(width=8,height=1,font=("Courier", 10),bg="#C5F0CE")
+LensMenu.config(width=8,height=1,font=("Courier", 10),bg="#d6f9ff")
 LensMenu.place(x=50,y= 60)
 
-Calculate = tk.Button(root, text = "Calculate",font=("Courier", 14,"bold"),bg="#F2DDEC",activebackground = "grey", command = Get)
+Calculate = tk.Button(root, text = "Calculate",font=("Times New Roman", 14,"bold"),bg="#d6f9ff",activebackground = "grey", command = Get)
 Calculate.place(width="100px",x = 135 , y = 100)
 
 text_box = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
 text_box.place(x=40,y=150)
 
-Picfolder = tk.Label(root,font=("Courier", 8),bg="#C5F0CE",text="Folder path :",bd = 2)
+Picfolder = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Folder path :",bd = 2)
 Picfolder.place(x=450,y=55)
 Picfolder_entry = tk.Entry(root,bd = 2)
 Picfolder_entry.place(x=550,y=50,width=200)
 
-Get_location = tk.Button(root, text = "Get coordinates",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getLoc)
+Get_location = tk.Button(root, text = "Get coordinates",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getLoc)
 Get_location.place(width="120px",x = 620 , y = 100)
 
-Get_alt = tk.Button(root, text = "Get altitude",font=("Courier", 10,"bold"),bg="#F2DDEC",activebackground = "grey",command = getalt)
+Get_alt = tk.Button(root, text = "Get altitude",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getalt)
 Get_alt.place(width="120px",x = 445 , y = 100)
 
 text_box2 = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
