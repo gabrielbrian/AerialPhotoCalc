@@ -135,7 +135,8 @@ def getLoc():
 	
 	Dir = Picfolder_entry.get()
 	img_contents = os.listdir(Dir)
-	Coordinate_List = []
+	Coordinate_List_lat = []
+	Coordinate_List_long = []
 	
 	def convert_to_degress(value):
 
@@ -172,20 +173,24 @@ def getLoc():
 			long = gps_all.get('GPSLongitude')
 			lat = gps_all.get('GPSLatitude')
 			
-		complete = lat,long
-		Coordinate_List.append(complete)
+	
+		Coordinate_List_lat.append(lat)
+		Coordinate_List_long.append(long)
 	
 	with open('coordinates.csv', 'w', newline='') as file:
 		writer = csv.writer(file)
 		writer.writerow(["-----coordinates------"])
 	
-	for result in Coordinate_List:
-		part1, part2 = result
-		Finallist = ('{} {}'.format(part1, part2))
-		with open('coordinates.csv', 'a', newline='') as file:
-			writer = csv.writer(file)
-			writer.writerow([Finallist])
-			
+	
+	with open('coordinates.csv', 'w', newline='') as file:	
+		wr = csv.writer(file)
+		wr.writerow(("Lat", "Long"))
+		rcount = 0
+		for row in Coordinate_List_lat:
+			wr.writerow((Coordinate_List_lat[rcount], Coordinate_List_long[rcount]))
+			rcount = rcount + 1
+		file.close()
+		
 	
 def getalt():
 	text_box2.delete(1.0, "end-1c")
