@@ -24,26 +24,25 @@ class Camera:
 	
 	def get_res(self):
 		return self.x_res * self.y_res	
-
+#lens selection (mm,x_fov,y_fov)
 lens200 = Lens(200,10.3,6.9) 
 lens300 = Lens(300,6.9,4.6)
 lens600 = Lens(600,3.4,2.3)
 lens800 = Lens(800,2.6,1.7)
 lens1700 = Lens(1700,1.23,0.8)
-
+#camera selection (x,y pixel density)
 CamD850 = Camera(8256,5504)
 CamD5 = Camera(5588,3712)
 Sony_Ar7= Camera(9504,6336)
-
 
 root = tk.Tk()
 
 
 def Get():
+	
 	text_box.delete(1.0, "end-1c")
-	
 	Currentcam = cam_var.get()
-	
+									#easier way to select variable?
 	if Currentcam == "D5":
 		Currentcam = CamD5.x_res
 	elif Currentcam == "D850":
@@ -54,7 +53,7 @@ def Get():
 		raise SystemExit
 	
 	Currnetlens = lens_var.get()
-	
+									#easier way to select variable?
 	if Currnetlens == "1700MM":
 		Currnetlens_y = lens1700.get_degy()
 		Currnetlens_x = lens1700.get_degx()
@@ -78,29 +77,33 @@ def Get():
 	else:
 		raise SystemExit
 
-	Currentdis = int(distance_entry.get())
-	Currentalt = int(altitude_entry.get())
-	Currentalt = Currentalt * 0.3048
+	Currentdis = int(distance_entry.get())	#Distance input in meters
+	Currentalt = int(altitude_entry.get())	#Alt input in feet
+	Currentalt = Currentalt * 0.3048 	#conversion from feet to meters
+	
+	#distance and angles to and from ground
 	camTriagle = math.sqrt(float(Currentdis**2 + Currentalt**2))
-
 	angleFromPlane = math.asin(Currentdis/camTriagle) * 180/math.pi
 	angleOnGround = math.asin(Currentalt/camTriagle) * 180/math.pi
 	C = 180 - angleFromPlane - angleOnGround
 
-	closeBorderAng = angleFromPlane - Currnetlens_y
+	closeBorderAng = angleFromPlane - Currnetlens_y  #adding and subtracting lens fov to calculate far and close border distance
 	farBorderAng = angleFromPlane + Currnetlens_y
 	C2 = 90 - closeBorderAng
-   
+   	
+   	#width of close border of photo calculation
 	closeBorder = math.tan(math.radians(closeBorderAng))
 	closeBorder_Dis = closeBorder * Currentalt
 	closeBorder_Half = closeBorder_Dis * math.tan(math.radians(Currnetlens_x))
 	closeBorder_res = (closeBorder_Half * 2 / Currentcam)
-
+	
+	#width of far border of photo calculation
 	farBorder = math.tan(math.radians(farBorderAng))
 	farBorder_Dis = farBorder * Currentalt
 	farBorder_Half = farBorder_Dis * math.tan(math.radians(Currnetlens_x))
 	farBorder_res = (farBorder_Half * 2 / Currentcam)
 
+	#addition calculations formatting and conversions
 	height = farBorder_Dis - closeBorder_Dis
 	squaremeter = ((farBorder_Half + closeBorder_Half) * height)
 	avg_ppm = (farBorder_res + 	closeBorder_res) / 2
@@ -138,7 +141,7 @@ def getLoc():
 	Coordinate_List_lat = []
 	Coordinate_List_long = []
 	
-	def convert_to_degress(value):
+	def convert_to_degress(value): #conversion from tupled exif coordinates to dms.
 
 		d0 = value[0][0]
 		d1 = value[0][1]
@@ -158,10 +161,10 @@ def getLoc():
 
 		full_path = os.path.join(Dir, image)
 		pil_img = Image.open(full_path)
-		exif = {ExifTags.TAGS[k]: v for k, v in pil_img._getexif().items() if k in ExifTags.TAGS}
+		exif = {ExifTags.TAGS[k]: v for k, v in pil_img._getexif().items() if k in ExifTags.TAGS} #compact dictionary of all exif data
 		gps_all = {}
     
-		for key in exif['GPSInfo'].keys():
+		for key in exif['GPSInfo'].keys(): #retrival of coordinates
 			try:
 
 				decoded_value = ExifTags.GPSTAGS.get(key)
@@ -195,7 +198,7 @@ def getLoc():
 def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
-	text_box2.insert('1.0',"       -------altitude-------")
+	text_box2.insert('1.0',"          -------altitude-------")
 	
 	for pic in os.listdir(Dir):
 	    fullpath = os.path.join(Dir,pic) 
