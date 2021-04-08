@@ -25,15 +25,23 @@ class Camera:
 	def get_res(self):
 		return self.x_res * self.y_res	
 #lens selection (mm,x_fov,y_fov)
+LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
+CamList = ["D5","D850","Sony_Ar7"] 
+
 lens200 = Lens(200,10.3,6.9) 
 lens300 = Lens(300,6.9,4.6)
 lens600 = Lens(600,3.4,2.3)
 lens800 = Lens(800,2.6,1.7)
 lens1700 = Lens(1700,1.23,0.8)
+
+LensClass = [lens200,lens300,lens600,lens800,lens1700]
 #camera selection (x,y pixel density)
+
 CamD850 = Camera(8256,5504)
 CamD5 = Camera(5588,3712)
-Sony_Ar7= Camera(9504,6336)
+Sony_Ar7 = Camera(9504,6336)
+
+CamClass = [CamD5,CamD850,Sony_Ar7]
 
 root = tk.Tk()
 
@@ -41,42 +49,21 @@ root = tk.Tk()
 def Get():
 	
 	text_box.delete(1.0, "end-1c")
-	Currentcam = cam_var.get()
-									#easier way to select variable?
-	if Currentcam == "D5":
-		Currentcam = CamD5.x_res
-	elif Currentcam == "D850":
-		Currentcam = CamD850.x_res
-	elif Currentcam == "Sony_Ar7":
-		Currentcam = Sony_Ar7.x_res
-	else:
-		raise SystemExit
+	camvar = cam_var.get()
 	
-	Currnetlens = lens_var.get()
-									#easier way to select variable?
-	if Currnetlens == "1700MM":
-		Currnetlens_y = lens1700.get_degy()
-		Currnetlens_x = lens1700.get_degx()
-		Currnetlens_mm = lens1700.mm
-	elif Currnetlens == "800MM":
-		Currnetlens_y = lens800.get_degy()
-		Currnetlens_x = lens800.get_degx()
-		Currnetlens_mm = lens800.mm
-	elif Currnetlens == "600MM":
-		Currnetlens_y = lens600.get_degy()
-		Currnetlens_x = lens600.get_degx()
-		Currnetlens_mm = lens600.mm
-	elif Currnetlens == "300MM":
-		Currnetlens_y = lens300.get_degy()
-		Currnetlens_x = lens300.get_degx()
-		Currnetlens_mm = lens300.mm
-	elif Currnetlens == "200MM":
-		Currnetlens_y = lens200.get_degy()
-		Currnetlens_x = lens200.get_degx()
-		Currnetlens_mm = lens200.mm
-	else:
-		raise SystemExit
+	Currentcam = int()								
+	for cam in range(len(CamList)):
+		if camvar == CamList[cam]:
+			Currentcam = CamClass[cam].x_res 
+		
 
+	lensvar = lens_var.get()
+	Currentlens= int()								
+	for lens in range(len(LensList)):
+		if lensvar == LensList[lens]:
+			Currentlens_y = LensClass[lens].get_degy()			
+			Currentlens_x = LensClass[lens].get_degx()
+			Currentlens_mm = LensClass[lens].mm
 	
 	if distance_entry.get() == "":
 		text_box.insert('end',"Distance box empty" + '\n')
@@ -96,21 +83,21 @@ def Get():
 	angleOnGround = math.asin(Currentalt/camTriagle) * 180/math.pi
 	C = 180 - angleFromPlane - angleOnGround
 
-	closeBorderAng = angleFromPlane - Currnetlens_y  #adding and subtracting lens fov to calculate far and close border distance
-	farBorderAng = angleFromPlane + Currnetlens_y
+	closeBorderAng = angleFromPlane - Currentlens_y  #adding and subtracting lens fov to calculate far and close border distance
+	farBorderAng = angleFromPlane + Currentlens_y
 	C2 = 90 - closeBorderAng
    	
    	#width of close border of photo calculation
 	closeBorder = math.tan(math.radians(closeBorderAng))
 	closeBorder_Dis = closeBorder * Currentalt
-	closeBorder_Half = closeBorder_Dis * math.tan(math.radians(Currnetlens_x))
-	closeBorder_res = (closeBorder_Half * 2 / Currentcam)
+	closeBorder_Half = closeBorder_Dis * math.tan(math.radians(Currentlens_x))
+	closeBorder_res = (closeBorder_Half * 2 / float(Currentcam))
 	
 	#width of far border of photo calculation
 	farBorder = math.tan(math.radians(farBorderAng))
 	farBorder_Dis = farBorder * Currentalt
-	farBorder_Half = farBorder_Dis * math.tan(math.radians(Currnetlens_x))
-	farBorder_res = (farBorder_Half * 2 / Currentcam)
+	farBorder_Half = farBorder_Dis * math.tan(math.radians(Currentlens_x))
+	farBorder_res = (farBorder_Half * 2 / float(Currentcam))
 
 	#addition calculations formatting and conversions
 	height = farBorder_Dis - closeBorder_Dis
@@ -188,12 +175,7 @@ def getLoc():
 	
 		Coordinate_List_lat.append(lat)
 		Coordinate_List_long.append(long)
-	
-	with open('coordinates.csv', 'w', newline='') as file:
-		writer = csv.writer(file)
-		writer.writerow(["-----coordinates------"])
-	
-	
+		
 	with open('coordinates.csv', 'w', newline='') as file:	
 		wr = csv.writer(file)
 		wr.writerow(("Lat", "Long"))
@@ -242,7 +224,7 @@ altitude.place(x=200,y=65)
 altitude_entry = tk.Entry(root,bd = 2)
 altitude_entry.place(x=300,y=60,width=65)
 
-CamList = ["D5","D850","Sony_Ar7",] 
+
 cam_var = tk.StringVar(root)
 cam_var.set(CamList[0])
 
@@ -250,7 +232,6 @@ CamMenu = tk.OptionMenu(root,cam_var,*CamList)
 CamMenu.config(width=8,height=1,font=("Courier", 10),bg="#d6f9ff")
 CamMenu.place(x=50,y=20)
 
-LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
 lens_var = tk.StringVar(root)
 lens_var.set(LensList[0])
 
