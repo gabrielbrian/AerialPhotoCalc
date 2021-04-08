@@ -24,7 +24,7 @@ class Camera:
 	
 	def get_res(self):
 		return self.x_res * self.y_res	
-#lens selection (mm,x_fov,y_fov)
+
 LensList = ["200MM","300MM","600MM","800MM","1700MM"] 
 CamList = ["D5","D850","Sony_Ar7"] 
 
@@ -34,31 +34,29 @@ lens600 = Lens(600,3.4,2.3)
 lens800 = Lens(800,2.6,1.7)
 lens1700 = Lens(1700,1.23,0.8)
 
-LensClass = [lens200,lens300,lens600,lens800,lens1700]
-#camera selection (x,y pixel density)
-
 CamD850 = Camera(8256,5504)
 CamD5 = Camera(5588,3712)
 Sony_Ar7 = Camera(9504,6336)
 
+LensClass = [lens200,lens300,lens600,lens800,lens1700]
 CamClass = [CamD5,CamD850,Sony_Ar7]
 
 root = tk.Tk()
 
-
 def Get():
 	
 	text_box.delete(1.0, "end-1c")
-	camvar = cam_var.get()
 	
+	camvar = cam_var.get()
 	Currentcam = int()								
+	
 	for cam in range(len(CamList)):
 		if camvar == CamList[cam]:
 			Currentcam = CamClass[cam].x_res 
 		
-
 	lensvar = lens_var.get()
 	Currentlens= int()								
+	
 	for lens in range(len(LensList)):
 		if lensvar == LensList[lens]:
 			Currentlens_y = LensClass[lens].get_degy()			
@@ -118,15 +116,12 @@ def Get():
 
 	parameters = [Distancetotarget,Groundangle,Planeangle,Farres,Closeres,Ppmavg,Height,Farlength,Closelength,Sqm,Avghl]
 
-
 	with open('Report.csv', 'a', newline='') as file:
 		writer = csv.writer(file)
 		for i in range(len(parameters)):
 			writer.writerow([parameters[i]])
 			text_box.insert('end',parameters[i] + '\n')
 		writer.writerow(["------------------------------------------------------- "])
-
-
 
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
@@ -154,25 +149,22 @@ def getLoc():
 		return d + (m / 60.0) + (s / 3600.0)
 
 	for image in img_contents:
-
 		full_path = os.path.join(Dir, image)
 		pil_img = Image.open(full_path)
+		
 		exif = {ExifTags.TAGS[k]: v for k, v in pil_img._getexif().items() if k in ExifTags.TAGS} #compact dictionary of all exif data
 		gps_all = {}
     
 		for key in exif['GPSInfo'].keys(): #retrival of coordinates
 			try:
-
 				decoded_value = ExifTags.GPSTAGS.get(key)
 				gps_all[decoded_value] = exif['GPSInfo'][key]
-
 			except:
 				text_box2.insert('end',full_path)
-			
+		
 			long = gps_all.get('GPSLongitude')
 			lat = gps_all.get('GPSLatitude')
 			
-	
 		Coordinate_List_lat.append(lat)
 		Coordinate_List_long.append(long)
 		
@@ -205,7 +197,6 @@ def getalt():
 	        text_box2.insert('end','\n')
 	        text_box2.insert('end',altitude_final)
 
-
 root.title('PhotoCalculator')
 root.geometry("800x450") 
 root.resizable(0, 0)
@@ -216,11 +207,13 @@ root.resizable(0, 0)
 
 distance = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Distance Mtr",bd = 2)
 distance.place(x=200,y=35)
+
 distance_entry = tk.Entry(root,bd = 2)
 distance_entry.place(x=300,y=30,width=65)
 
 altitude = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Altitude FT",bd = 2)
 altitude.place(x=200,y=65)
+
 altitude_entry = tk.Entry(root,bd = 2)
 altitude_entry.place(x=300,y=60,width=65)
 
@@ -247,6 +240,7 @@ text_box.place(x=40,y=150)
 
 Picfolder = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Folder path :",bd = 2)
 Picfolder.place(x=550,y=25)
+
 Picfolder_entry = tk.Entry(root,bd = 2)
 Picfolder_entry.place(x=440,y=50,width=310)
 
