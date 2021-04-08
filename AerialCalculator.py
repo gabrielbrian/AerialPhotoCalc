@@ -134,7 +134,7 @@ def Get():
 
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
-	text_box2.insert('1.0',"coordinates in csv")
+	text_box2.insert('1.0',"          coordinates in csv" + '\n')
 	
 	Dir = Picfolder_entry.get()
 	img_contents = os.listdir(Dir)
@@ -194,7 +194,11 @@ def getLoc():
 			rcount = rcount + 1
 		file.close()
 		
-	
+	for cords in range(len(Coordinate_List_lat)):
+		Final = str(cords + 1),Coordinate_List_lat[cords],Coordinate_List_long[cords]
+		text_box2.insert('end',Final) 
+		text_box2.insert('end','\n') 
+
 def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
