@@ -171,7 +171,7 @@ def getLoc():
 				gps_all[decoded_value] = exif['GPSInfo'][key]
 
 			except:
-				print(full_path,"no info")
+				text_box2.insert('end',full_path)
 			
 			long = gps_all.get('GPSLongitude')
 			lat = gps_all.get('GPSLatitude')
