@@ -77,8 +77,17 @@ def Get():
 	else:
 		raise SystemExit
 
-	Currentdis = int(distance_entry.get())	#Distance input in meters
-	Currentalt = int(altitude_entry.get())	#Alt input in feet
+	
+	if distance_entry.get() == "":
+		text_box.insert('end',"Distance box empty" + '\n')
+	else:
+		Currentdis = int(distance_entry.get())	#Distance input in meters
+
+	if altitude_entry.get() == "":
+		text_box.insert('end',"Altitude box empty" + '\n')
+	else:
+		Currentalt = int(altitude_entry.get())	#Alt input in feet
+	
 	Currentalt = Currentalt * 0.3048 	#conversion from feet to meters
 	
 	#distance and angles to and from ground
@@ -256,15 +265,15 @@ text_box = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 
 text_box.place(x=40,y=150)
 
 Picfolder = tk.Label(root,font=("Courier", 8),bg="#d6f9ff",text="Folder path :",bd = 2)
-Picfolder.place(x=450,y=55)
+Picfolder.place(x=550,y=25)
 Picfolder_entry = tk.Entry(root,bd = 2)
-Picfolder_entry.place(x=550,y=50,width=200)
+Picfolder_entry.place(x=440,y=50,width=310)
 
 Get_location = tk.Button(root, text = "Get coordinates",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getLoc)
-Get_location.place(width="120px",x = 620 , y = 100)
+Get_location.place(width="120px",x = 605 , y = 100)
 
 Get_alt = tk.Button(root, text = "Get altitude",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getalt)
-Get_alt.place(width="120px",x = 445 , y = 100)
+Get_alt.place(width="120px",x = 430 , y = 100)
 
 text_box2 = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
 text_box2.place(x=425,y=150)
