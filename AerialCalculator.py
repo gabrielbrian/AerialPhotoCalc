@@ -56,7 +56,7 @@ def Get():
 		
 	lensvar = lens_var.get()
 	Currentlens= int()								
-	
+
 	for lens in range(len(LensList)):
 		if lensvar == LensList[lens]:
 			Currentlens_y = LensClass[lens].get_degy()			
@@ -126,8 +126,8 @@ def Get():
 def getLoc():
 	text_box2.delete(1.0, "end-1c")
 	text_box2.insert('1.0',"          coordinates in csv" + '\n')
-	
-	Dir = Picfolder_entry.get()
+	Dir = Picfolder_entry.get()	
+
 	img_contents = os.listdir(Dir)
 	Coordinate_List_lat = []
 	Coordinate_List_long = []
@@ -176,6 +176,15 @@ def getLoc():
 			wr.writerow((Coordinate_List_lat[rcount], Coordinate_List_long[rcount]))
 			rcount = rcount + 1
 		file.close()
+		
+	with open("coordinates.csv", "r") as infile, open("barak.csv", "w") as outfile:
+		reader = csv.reader(infile)
+		writer = csv.writer(outfile)
+		conversion = set(')(')
+		for row in reader:
+			newrow = [''.join('' if c in conversion else c for c in entry) for entry in row]
+			writer.writerow(newrow)
+		infile.close(),outfile.close()
 		
 	for cords in range(len(Coordinate_List_lat)):
 		Final = str(cords + 1),Coordinate_List_lat[cords],Coordinate_List_long[cords]
