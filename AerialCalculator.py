@@ -53,6 +53,7 @@ def Get():
 	for cam in range(len(CamList)):
 		if camvar == CamList[cam]:
 			Currentcam = CamClass[cam].x_res 
+			Currentcam_y = CamClass[cam].y_res
 		
 	lensvar = lens_var.get()
 	Currentlens= int()								
@@ -100,14 +101,16 @@ def Get():
 	#addition calculations formatting and conversions
 	height = farBorder_Dis - closeBorder_Dis
 	squaremeter = ((farBorder_Half + closeBorder_Half) * height)
-	avg_ppm = (farBorder_res + 	closeBorder_res) / 2
+	avg_ppmy = str("{:.2f}".format(height / Currentcam_y))
+	avg_ppmx = str("{:.2f}".format((farBorder_Half + closeBorder_Half) / (Currentcam)))
+	avg_ppm = "x:"+ avg_ppmx ,"y:"+ avg_ppmy
 
 	Distancetotarget = " Distance to target : " + str("{:.2f}".format(camTriagle))
 	Groundangle = " Ground target angle : " + str("{:.2f}".format(angleOnGround))
 	Planeangle = " Camera angle from plane : " + str("{:.2f}".format(angleFromPlane))
 	Farres =  " Pixel per CM top : " + str("{:.2f}".format(farBorder_res*100))
 	Closeres = " Pixel per CM bottom : " + str("{:.2f}".format(closeBorder_res*100))
-	Ppmavg = " Avg pixel per meter : " + str("{:.2f}".format(avg_ppm*100))
+	Ppmavg = " Avg ppm : " + str(avg_ppm)
 	Height = " Height : " + str("{:.2f}".format(height))
 	Farlength = " Top length : " + str("{:.2f}".format(farBorder_Half* 2))
 	Closelength = " Bottom length : "+ str("{:.2f}".format(closeBorder_Half * 2))
@@ -131,7 +134,9 @@ def getLoc():
 	img_contents = os.listdir(Dir)
 	Coordinate_List_lat = []
 	Coordinate_List_long = []
-	
+	Finallist = []
+	Latfinal = []
+	Longfinal = []	
 	def convert_to_degress(value): #conversion from tupled exif coordinates to dms.
 
 		d0 = value[0][0]
@@ -154,7 +159,7 @@ def getLoc():
 		
 		exif = {ExifTags.TAGS[k]: v for k, v in pil_img._getexif().items() if k in ExifTags.TAGS} #compact dictionary of all exif data
 		gps_all = {}
-    
+		
 		for key in exif['GPSInfo'].keys(): #retrival of coordinates
 			try:
 				decoded_value = ExifTags.GPSTAGS.get(key)
@@ -164,13 +169,13 @@ def getLoc():
 		
 			long = gps_all.get('GPSLongitude')
 			lat = gps_all.get('GPSLatitude')
-			
+	
 		Coordinate_List_lat.append(lat)
 		Coordinate_List_long.append(long)
-		
+
 	with open('coordinates.csv', 'w', newline='') as file:	
 		wr = csv.writer(file)
-		wr.writerow(("Lat", "Long"))
+		#wr.writerow(("Lat", "Long"))
 		rcount = 0
 		for row in Coordinate_List_lat:
 			wr.writerow((Coordinate_List_lat[rcount], Coordinate_List_long[rcount]))
@@ -180,17 +185,37 @@ def getLoc():
 	with open("coordinates.csv", "r") as infile, open("barak.csv", "w") as outfile:
 		reader = csv.reader(infile)
 		writer = csv.writer(outfile)
-		conversion = set(')(')
+		conversion = set(')( .,')
 		for row in reader:
 			newrow = [''.join('' if c in conversion else c for c in entry) for entry in row]
-			writer.writerow(newrow)
+			for newer in newrow:
+				newer = str(newer[:2]) + '.' + str(newer[2:])
+				Finallist.append(newer)
 		infile.close(),outfile.close()
-		
+	
+	for i in range(len(Finallist)):
+		if i % 2 != 1:
+			Latfinal.append(Finallist[i])
+		else:
+			Longfinal.append(Finallist[i])
+	
+	with open('barak.csv', 'w', newline='') as file:	
+		wr = csv.writer(file)
+		#wr.writerow(("Lat", "Long"))
+		rcount = 0
+		for row in Latfinal:
+			wr.writerow((Latfinal[rcount], Longfinal[rcount]))
+			rcount = rcount + 1
+		file.close()	
+	
+
+
 	for cords in range(len(Coordinate_List_lat)):
 		Final = str(cords + 1),Coordinate_List_lat[cords],Coordinate_List_long[cords]
 		text_box2.insert('end',Final) 
 		text_box2.insert('end','\n') 
 
+	
 def getalt():
 	text_box2.delete(1.0, "end-1c")
 	Dir = Picfolder_entry.get()
@@ -203,8 +228,10 @@ def getalt():
 	        my_image = img(image_file)
 	               
 	        altitude_final = my_image.gps_altitude 
+	        datetime_final = my_image.datetime
+	        final_alttime = altitude_final,datetime_final
 	        text_box2.insert('end','\n')
-	        text_box2.insert('end',altitude_final)
+	        text_box2.insert('end',final_alttime)
 
 root.title('PhotoCalculator')
 root.geometry("800x450") 
@@ -253,10 +280,10 @@ Picfolder.place(x=550,y=25)
 Picfolder_entry = tk.Entry(root,bd = 2)
 Picfolder_entry.place(x=440,y=50,width=310)
 
-Get_location = tk.Button(root, text = "Get coordinates",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getLoc)
+Get_location = tk.Button(root, text = "Coordinates",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getLoc)
 Get_location.place(width="120px",x = 605 , y = 100)
 
-Get_alt = tk.Button(root, text = "Get altitude",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getalt)
+Get_alt = tk.Button(root, text = "Altitude/DateTime",font=("Times New Roman", 10,"bold"),bg="#d6f9ff",activebackground = "grey",command = getalt)
 Get_alt.place(width="120px",x = 430 , y = 100)
 
 text_box2 = tk.Text(root, width = 42, height = 16,borderwidth=3,font=("Courier", 10))
